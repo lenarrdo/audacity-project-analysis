@@ -3,7 +3,6 @@
 **System:** Audacity, version 4.0 development line (`master` branch)
 **Course:** Software Design and Architecture, PoliTo 2025/2026
 
-
 ## 1. Purpose of the System
 
 Audacity is a free, open source, cross platform digital audio editor and recorder. It lets users record live audio, import and export a wide range of formats, and edit and process multitrack projects through standard cut, copy, and paste editing, a large set of built in effects, and support for external plugin formats. The project has been developed since 1999 and, since 2021, is maintained and funded by Muse Group.
@@ -36,13 +35,13 @@ Internally the application uses a dependency injection container from the Muse f
 
 The analysis covers the compiled `master` tree: the new `src/` frontend together with the legacy core under `au3/libraries`, `au3/src`, and `au3/modules`. No files were selected manually. The `muse/` framework is excluded as an underlying dependency. Measured directly across the same source tree, the scope is summarized below (SLOC counts non blank, non comment lines).
 
-| Area | Source files | SLOC | Physical lines |
-|---|---:|---:|---:|
-| `au3/src` (legacy application) | 379 | 107,085 | 146,272 |
-| `au3/libraries` (legacy `au3-*` libraries) | 442 | 89,969 | 125,464 |
-| `src/` (new 4.0 frontend) | 532 | 80,590 | 105,642 |
-| `au3/modules` (legacy plugin modules) | 123 | 19,683 | 27,273 |
-| **Total** | **1,476** | **297,327** | **404,651** |
+| Area                                       | Source files |        SLOC | Physical lines |
+| ------------------------------------------ | -----------: | ----------: | -------------: |
+| `au3/src` (legacy application)             |          379 |     107,085 |        146,272 |
+| `au3/libraries` (legacy `au3-*` libraries) |          442 |      89,969 |        125,464 |
+| `src/` (new 4.0 frontend)                  |          532 |      80,590 |        105,642 |
+| `au3/modules` (legacy plugin modules)      |          123 |      19,683 |         27,273 |
+| **Total**                                  |    **1,476** | **297,327** |    **404,651** |
 
 These two counts come from different measurement methods and are not expected to match exactly: 1,232 is the translation-unit count reported by the CMake compilation database used in the dependency analysis, while 1,476 is a direct count of source files across the analyzed tree.
 

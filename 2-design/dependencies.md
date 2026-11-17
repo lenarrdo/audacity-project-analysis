@@ -51,13 +51,13 @@ directly instantiated in Audacity's audio model.
 Ca = afferent coupling (fan-in); Ce = efferent coupling (fan-out);
 I = Ce / (Ca + Ce) instability index [Martin, Clean Architecture].
 
-| Header | Ca | Ce | I | Risk |
-|---|---:|---:|---:|---|
-| `Prefs.h` | 166 | 10 | 0.057 | Maximally stable — mass recompile surface |
-| `Project.h` | 156 | 6 | 0.037 | Maximally stable — central hub |
-| `WaveTrack.h` | 139 | 13 | 0.086 | Bidirectional coupling hotspot |
-| `Track.h` | 52 | 13 | 0.200 | Moderately stable base class |
-| `AudioIO.h` | 40 | 14 | 0.259 | Engine-wide dependency |
+| Header        |  Ca |  Ce |     I | Risk                                      |
+| ------------- | --: | --: | ----: | ----------------------------------------- |
+| `Prefs.h`     | 166 |  10 | 0.057 | Maximally stable — mass recompile surface |
+| `Project.h`   | 156 |   6 | 0.037 | Maximally stable — central hub            |
+| `WaveTrack.h` | 139 |  13 | 0.086 | Bidirectional coupling hotspot            |
+| `Track.h`     |  52 |  13 | 0.200 | Moderately stable base class              |
+| `AudioIO.h`   |  40 |  14 | 0.259 | Engine-wide dependency                    |
 
 `WaveTrack.h` is the most dangerous header: high fan-in (Ca = 139) combined
 with non-trivial fan-out (Ce = 13) means it is both widely depended upon and
@@ -215,12 +215,12 @@ a structural hotspot, a data-level shared-state element, and a behavioral
 runtime coordination point. The following components appear as high-risk nodes
 across all three dimensions:
 
-| Component | Structural | Data-Level | Behavioral | Risk |
-|---|---|---|---|---|
-| `WaveTrack` | 4-level chain; Ca=139, Ce=13; 40 edges to `lib-builtin-effects` | `shared_ptr` in TrackList; `Publisher<WaveTrackMessage>` schema | RT callback access; concurrent UI and audio thread state changes | **Critical** |
-| `AudacityProject` | Ca=156, I=0.037; hub across all `lib-*` layers | Service locator for all subsystems via `ClientData::Site<>` | Head of 5-step initialization chain | **High** |
-| `AudioIO` | Ca=40, Ce=14, I=0.259 | Reads `gPrefs`; holds cross-thread `mOwningProject` | Owns RT callback, atomic flags, `CallAfter` emission | **High** |
-| `Prefs.h` / `gPrefs` | Ca=166, I=0.057; most-included header | Common Coupling across the entire library layer | Read during RT-sensitive initialization | **Medium–High** |
+| Component            | Structural                                                      | Data-Level                                                      | Behavioral                                                       | Risk            |
+| -------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------- | --------------- |
+| `WaveTrack`          | 4-level chain; Ca=139, Ce=13; 40 edges to `lib-builtin-effects` | `shared_ptr` in TrackList; `Publisher<WaveTrackMessage>` schema | RT callback access; concurrent UI and audio thread state changes | **Critical**    |
+| `AudacityProject`    | Ca=156, I=0.037; hub across all `lib-*` layers                  | Service locator for all subsystems via `ClientData::Site<>`     | Head of 5-step initialization chain                              | **High**        |
+| `AudioIO`            | Ca=40, Ce=14, I=0.259                                           | Reads `gPrefs`; holds cross-thread `mOwningProject`             | Owns RT callback, atomic flags, `CallAfter` emission             | **High**        |
+| `Prefs.h` / `gPrefs` | Ca=166, I=0.057; most-included header                           | Common Coupling across the entire library layer                 | Read during RT-sensitive initialization                          | **Medium–High** |
 
 These components are risky not because of any single coupling dimension, but
 because a change propagates structurally, through shared data, and across
@@ -233,8 +233,9 @@ Coupling explicit and testable.
 
 ---
 
-*Evidence artifacts: `analysis/dependencies/mt2-structural/`
+_Evidence artifacts: `analysis/dependencies/mt2-structural/`
 (coupling-metrics.txt, inter-library-graph.svg, inheritance-raw.txt)
 and `analysis/dependencies/mt4-behavioral/`
 (audio-stream-evidence.txt, synchronization-evidence.txt,
-observer-evidence.txt, ui-event-evidence.txt, initialization-evidence.txt).*
+observer-evidence.txt, ui-event-evidence.txt, initialization-evidence.txt)._
+
